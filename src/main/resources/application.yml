@@ -1,0 +1,4 @@
+spring:
+  main:
+    banner-mode: log
+    lazy-initialization: true

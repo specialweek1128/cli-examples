@@ -1,0 +1,66 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'eclipse'
+}
+
+group = 'example.cli'
+
+def javaVersion = JavaVersion.VERSION_13
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+def defaultEncoding = 'UTF-8'
+[compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'commons-cli:commons-cli:1.4'
+    implementation 'org.postgresql:postgresql:42.2.9'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    mainClassName = 'examples.cli.App'
+}
+
+bootRun {
+    if (project.hasProperty('args')) {
+        args project.args.split(',')
+    }
+}
+
+def excludeFile = '**/.gitkeep'
+sourceSets {
+    main {
+        java {
+            exclude excludeFile
+        }
+    }
+    test {
+        java {
+            exclude excludeFile
+        }
+    }
+}
+
+processResources {
+    exclude excludeFile
+}
+
+processTestResources {
+    exclude excludeFile
+}
